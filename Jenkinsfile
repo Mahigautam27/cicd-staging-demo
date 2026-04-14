@@ -8,12 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                git 'https://github.com/Mahigautam27/cicd-staging-demo.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
