@@ -16,28 +16,29 @@ pipeline {
             }
         }
 
-        stage('Stop Existing Container') {
-            steps {
-                sh "docker stop ${CONTAINER_NAME} || true"
-                sh "docker rm ${CONTAINER_NAME} || true"
-            }
-        }
-
-        stage('Deploy to Staging') {
-            steps {
-                sh """
-                docker run -d \
-                --name ${CONTAINER_NAME} \
-                -p 5000:5000 \
-                ${IMAGE_NAME}:latest
-                """
-            }
-        }
-
-        stage('Post-Deployment Verification') {
-            steps {
-                sh "curl http://localhost:5000 || true"
-            }
-        }
+       stage('Stop Existing Container') {
+    steps {
+        bat "docker stop %CONTAINER_NAME% || exit 0"
+        bat "docker rm %CONTAINER_NAME% || exit 0"
     }
+}
+
+stage('Deploy to Staging') {
+    steps {
+        bat """
+        docker run -d ^
+        --name %CONTAINER_NAME% ^
+        -p 5000:5000 ^
+        %IMAGE_NAME%:latest
+        """
+    }
+}
+
+stage('Post-Deployment Verification') {
+    steps {
+        bat "curl http://localhost:5000"
+     }
+    }
+   
+  }
 }
